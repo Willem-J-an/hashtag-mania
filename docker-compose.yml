@@ -9,7 +9,13 @@ services:
       POSTGRES_PASSWORD: example
     volumes:
       - ./db/postgres-data:/var/lib/postgresql/data
-      - ./db/1.schema.sql:/docker-entrypoint-initdb.d/1-schema.sql
+      - ./db/1-schema.sql:/docker-entrypoint-initdb.d/1-schema.sql
       - ./db/2-table.sql:/docker-entrypoint-initdb.d/2-table.sql
   client:
-    build: ./client
+    build: ./solution
+    depends_on:
+      - "db"
+    environment:
+      - twitterKey=${twitterKey}
+      - twitterSecret=${twitterSecret}
+      - postgres=${postgres}

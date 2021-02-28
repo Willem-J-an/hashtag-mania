@@ -1,8 +1,8 @@
-CREATE TABLE IF NOT EXISTS TWITTER.HAPPY_HASHTAGS (
-    NAME character(280),
-    DATEHOUR timestamp(0),
-    HAPPINESS integer,
-    PRIMARY KEY (NAME, DATEHOUR)
+CREATE TABLE IF NOT EXISTS twitter.happy_hashtags (
+    name character(280),
+    datehour timestamp(0),
+    happiness integer,
+    PRIMARY KEY (name, datehour)
 );
-ALTER TABLE TWITTER.HAPPY_HASHTAGS
+ALTER TABLE twitter.happy_hashtags
     OWNER to postgres;

@@ -100,6 +100,7 @@ ClientBin/
 *.dbmdl
 *.[Pp]ublish.xml
 **/appsettings.json
+**/.env
 
 *.publishsettings
 
@@ -116,6 +117,9 @@ UpgradeLog*.htm
 # SQL Server files
 App_Data/*.mdf
 App_Data/*.ldf
+
+# Postgres
+**/postgres-data
 
 # =========================
 # Windows detritus
