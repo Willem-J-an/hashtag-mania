@@ -1,12 +1,10 @@
 ﻿using System;
+using Microsoft.Extensions.Configuration;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.IO;
-using System.Net.Http;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Configuration;
 
 namespace twitter {
     public class Program {
@@ -16,9 +14,10 @@ namespace twitter {
         private static string TwitterKey { get; set; }
         private static string TwitterSecret { get; set; }
         public static string ConnectionString { get; private set; }
-        private const int StreamLimit = 500; // Set a limit or 0 for no limit
+        private static int StreamLimit;  // Set a limit or 0 for no limit
 
         static void Main(string[] args) {
+            Console.WriteLine("Starting program");
             LoadConfig();
             TwitterClient = new TwitterClient(
                 TwitterKey, TwitterSecret, StreamLimit
@@ -29,44 +28,26 @@ namespace twitter {
                 ), "tweets with hashtags and emoji");
             WaitForDbStartup();
             _ = ViewResultsPeriodically();
-            while (!TwitterClient.Complete) {
-                try {
-                    TwitterClient.StreamTweets();
-                } catch (AggregateException exception) {
-                    if (exception.InnerException is HttpRequestException) {
-                        TwitterClient.HttpErrorHandler(
-                            (HttpRequestException)exception.InnerException
-                        );
-                    } else {
-                        Debug.WriteLine("InnerException type not recognized.");
-                        TwitterClient.BackoffHandler(false, false);
-                    }
-                } catch (HttpRequestException exception) {
-                    Debug.Write(exception);
-                    TwitterClient.HttpErrorHandler(exception);
-                } catch (Exception exception) {
-                    Debug.Write(exception);
-                    Debug.WriteLine("exception type not recognized.");
-                    TwitterClient.BackoffHandler(false, false);
-                }
-            }
-            Debug.WriteLine("Exiting program: TwitterClient reached StreamLimit.");
+            while (!TwitterClient.Complete) { TwitterClient.EnableStream(); }
+            Console.WriteLine("Exiting program: TwitterClient reached StreamLimit.");
         }
 
         public static void LoadConfig() {
-            if (File.Exists("appsettings.json")) {
-                var configuration = new ConfigurationBuilder()
-                    .AddJsonFile("appsettings.json", false, true).Build();
-                var appSettings = configuration.GetSection("AppSettings");
-                TwitterKey = appSettings.GetSection("twitterKey").Value;
-                TwitterSecret = appSettings.GetSection("twitterSecret").Value;
-                ConnectionString = configuration.GetConnectionString("postgres");
-            } else {
-                TwitterKey = System.Environment.GetEnvironmentVariable("twitterKey");
-                TwitterSecret = System.Environment.GetEnvironmentVariable("twitterSecret");
-                ConnectionString = System.Environment.GetEnvironmentVariable("postgres");
-            }
-            Console.WriteLine($"using {ConnectionString}");
+            var configuration = new ConfigurationBuilder()
+                .AddJsonFile("appsettings.json", false, true)
+                .AddEnvironmentVariables().Build();
+            TwitterKey = configuration.GetValue<string>(
+                "AppSettings:twitterKey"
+            );
+            TwitterSecret = configuration.GetValue<string>(
+                "AppSettings:twitterSecret"
+            );
+            ConnectionString = configuration.GetValue<string>(
+                "ConnectionStrings:postgres"
+            );
+            StreamLimit = configuration.GetValue<int>(
+                "AppSettings:StreamLimit"
+            );
         }
 
         public static void WaitForDbStartup() {
@@ -74,6 +55,7 @@ namespace twitter {
             while (databaseDown) {
                 try {
                     Postgres.TryDbUp();
+                    databaseDown = false;
                 } catch {
                     Console.WriteLine("Database not responding, retrying in 5s...");
                     Thread.Sleep(TimeSpan.FromSeconds(5));
@@ -81,7 +63,10 @@ namespace twitter {
             }
         }
 
-        public static void AddOrUpdateHashtag(Match hashtag, DateTime dateHour) {
+        public static void AddOrUpdateHashtag(
+            Match hashtag,
+            DateTime dateHour
+        ) {
             var hashtagSaved = Hashtags.Find((Hashtag hashtagSaved) => {
                 return hashtagSaved.name == hashtag.ToString() &&
                 hashtagSaved.datehour == dateHour;
@@ -111,15 +96,12 @@ namespace twitter {
                 await Task.Run(() => {
                     Console.WriteLine("Hourly popular hashtag review:");
                     Postgres.GetRecentPopularHashtags().ForEach(
-                        (Hashtag h) => {
-                            Console.WriteLine(String.Format(
-                                ">>> Hashtag: {0}; || Happiness: {1}",
-                                h.name.Trim(), h.happiness
-                            ));
-                        }
+                        (Hashtag h) => Console.WriteLine(h)
                     );
                     var now = DateTime.UtcNow;
-                    var previousTrigger = new DateTime(now.Year, now.Month, now.Day, now.Hour, 0, 0, now.Kind);
+                    var previousTrigger = new DateTime(
+                        now.Year, now.Month, now.Day, now.Hour, 0, 0, now.Kind
+                    );
                     var nextTrigger = previousTrigger + TimeSpan.FromHours(1);
                     Thread.Sleep(nextTrigger - now);
                 });

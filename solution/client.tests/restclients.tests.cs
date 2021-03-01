@@ -2,19 +2,25 @@ using System;
 using System.Diagnostics;
 using Microsoft.Extensions.Configuration;
 using NUnit.Framework;
+using System.Text.Json;
 using twitter;
 
 namespace client.tests {
     public class TwitterClient_Tests {
-        private IConfigurationSection AppSettings { get; set; }
-        private const int StreamLimit = 10;
+        private string TwitterKey { get; set; }
+        private string TwitterSecret { get; set; }
         private TwitterClient TwitterClient { get; set; }
 
         [SetUp]
         public void Setup() {
             var configuration = new ConfigurationBuilder()
                 .AddJsonFile("appsettings.json", false, true).Build();
-            AppSettings = configuration.GetSection("AppSettings");
+            this.TwitterKey = configuration.GetValue<string>(
+                "AppSettings:twitterKey"
+            );
+            this.TwitterSecret = configuration.GetValue<string>(
+                "AppSettings:twitterSecret"
+            );
         }
 
         [Test]
@@ -22,9 +28,8 @@ namespace client.tests {
             Assert.DoesNotThrow(
                 () => {
                     this.TwitterClient = new TwitterClient(
-                        AppSettings.GetSection("twitterKey").Value,
-                        AppSettings.GetSection("twitterSecret").Value,
-                        StreamLimit);
+                        this.TwitterKey, this.TwitterSecret, 10
+                    );
                 }
             );
         }
@@ -41,9 +46,7 @@ namespace client.tests {
         [Test]
         public void BackoffHandler_RateLimit_Exception_Sets_Correct_Delay() {
             this.TwitterClient = new TwitterClient(
-                AppSettings.GetSection("twitterKey").Value,
-                AppSettings.GetSection("twitterSecret").Value,
-                1
+                this.TwitterKey, this.TwitterSecret, 10
             );
             this.TwitterClient.Stopwatch = new Stopwatch();
             this.TwitterClient.Stopwatch.Start();
@@ -59,9 +62,7 @@ namespace client.tests {
         [Test]
         public void BackoffHandler_Http_Exception_Sets_Correct_Delay() {
             this.TwitterClient = new TwitterClient(
-                AppSettings.GetSection("twitterKey").Value,
-                AppSettings.GetSection("twitterSecret").Value,
-                1
+                this.TwitterKey, this.TwitterSecret, 10
             );
             this.TwitterClient.Stopwatch = new Stopwatch();
             this.TwitterClient.Stopwatch.Start();
@@ -78,25 +79,31 @@ namespace client.tests {
             );
         }
     }
+
     public class StreamFilter_Tests {
-        private IConfigurationSection AppSettings { get; set; }
+        private string TwitterKey { get; set; }
+        private string TwitterSecret { get; set; }
         private TwitterClient TwitterClient { get; set; }
 
         [SetUp]
         public void Setup() {
             var configuration = new ConfigurationBuilder()
                 .AddJsonFile("appsettings.json", false, true).Build();
-            AppSettings = configuration.GetSection("AppSettings");
-            this.TwitterClient = new TwitterClient(
-                AppSettings.GetSection("twitterKey").Value,
-                AppSettings.GetSection("twitterSecret").Value,
-                1
+            this.TwitterKey = configuration.GetValue<string>(
+                "AppSettings:twitterKey"
+            );
+            this.TwitterSecret = configuration.GetValue<string>(
+                "AppSettings:twitterSecret"
             );
         }
+
         [Test]
         public void StreamFilter_Does_Not_Throw() {
+            this.TwitterClient = new TwitterClient(
+                this.TwitterKey, this.TwitterSecret, 10
+            );
             Assert.DoesNotThrow(() =>
-               new StreamFilter(TwitterClient, string.Format(
+               new StreamFilter(this.TwitterClient, string.Format(
                    "({0}) has:hashtags",
                     string.Join(" OR ", Emoji.Happy_Emoji)
                ), "tweets with hashtags and emoji")

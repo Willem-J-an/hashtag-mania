@@ -7,8 +7,7 @@ COPY client.tests/twitter.tests.csproj ./client.tests/
 RUN dotnet restore
 COPY . .
 
-RUN dotnet build &&\
-    dotnet test --filter FullyQualifiedName\!~StorageClient_Tests
+RUN dotnet test --filter FullyQualifiedName\!~StorageClient_Tests
 
 WORKDIR /source/client
 RUN dotnet publish -c release -o /app --self-contained false --no-restore
