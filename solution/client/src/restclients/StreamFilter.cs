@@ -11,6 +11,7 @@ namespace twitter {
             public string value { get; set; }
             public string tag { get; set; }
         }
+
         public StreamFilter(HttpClient client, string value, string tag) {
             add = new List<StreamRule>{
             new StreamRule(){
@@ -20,7 +21,7 @@ namespace twitter {
         };
 
             client.PostAsync(
-                new Uri("https://api.twitter.com/2/tweets/search/stream/rules"),
+                "/2/tweets/search/stream/rules",
                 new StringContent(
                     JsonSerializer.Serialize(this),
                     System.Text.Encoding.UTF8,
@@ -29,9 +30,7 @@ namespace twitter {
             );
 
             var streamRules = client.GetStringAsync(
-                new Uri(
-                    "https://api.twitter.com/2/tweets/search/stream/rules"
-                )
+                "/2/tweets/search/stream/rules"
             ).Result;
 
             Debug.WriteLine($"Implemented StreamRules: {streamRules} ");

@@ -2,6 +2,8 @@
 
 The solution streams tweets and determine what are the happiest hashtags being posted every hour.
 
+View the design and structure in the included .drawio file. Viewable in vs code with hediet.vscode-drawio extension.
+
 ## Getting Started
 The solution can run:
 - using docker-compose

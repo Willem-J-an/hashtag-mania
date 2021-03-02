@@ -21,7 +21,8 @@ namespace twitter {
             LoadConfig();
             TwitterClient = new TwitterClient(
                 TwitterKey, TwitterSecret, StreamLimit
-            );
+            )
+            { BaseAddress = new Uri("https://api.twitter.com") };
             new StreamFilter(TwitterClient, string.Format(
                     "({0}) has:hashtags",
                     string.Join(" OR ", Emoji.Happy_Emoji)

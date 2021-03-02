@@ -29,7 +29,8 @@ namespace client.tests {
                 () => {
                     this.TwitterClient = new TwitterClient(
                         this.TwitterKey, this.TwitterSecret, 10
-                    );
+                    )
+                    { BaseAddress = new Uri("https://api.twitter.com") };
                 }
             );
         }
@@ -38,7 +39,7 @@ namespace client.tests {
         public void Request_Does_Not_Throw() {
             Assert.DoesNotThrowAsync(
                 () => this.TwitterClient.GetStringAsync(
-                "https://api.twitter.com/2/tweets/search/recent?max_results=10&query=test"
+                    "/2/tweets/search/recent?max_results=10&query=test"
                 )
             );
         }
@@ -47,7 +48,8 @@ namespace client.tests {
         public void BackoffHandler_RateLimit_Exception_Sets_Correct_Delay() {
             this.TwitterClient = new TwitterClient(
                 this.TwitterKey, this.TwitterSecret, 10
-            );
+            )
+            { BaseAddress = new Uri("https://api.twitter.com") };
             this.TwitterClient.Stopwatch = new Stopwatch();
             this.TwitterClient.Stopwatch.Start();
             this.TwitterClient.BackoffHandler(true, true);
@@ -63,7 +65,8 @@ namespace client.tests {
         public void BackoffHandler_Http_Exception_Sets_Correct_Delay() {
             this.TwitterClient = new TwitterClient(
                 this.TwitterKey, this.TwitterSecret, 10
-            );
+            )
+            { BaseAddress = new Uri("https://api.twitter.com") };
             this.TwitterClient.Stopwatch = new Stopwatch();
             this.TwitterClient.Stopwatch.Start();
             this.TwitterClient.BackoffHandler(true, false);
@@ -101,7 +104,8 @@ namespace client.tests {
         public void StreamFilter_Does_Not_Throw() {
             this.TwitterClient = new TwitterClient(
                 this.TwitterKey, this.TwitterSecret, 10
-            );
+            )
+            { BaseAddress = new Uri("https://api.twitter.com") };
             Assert.DoesNotThrow(() =>
                new StreamFilter(this.TwitterClient, string.Format(
                    "({0}) has:hashtags",

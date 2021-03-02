@@ -60,7 +60,7 @@ namespace twitter {
         }
         private void StreamTweets() {
             var stream = this.GetStreamAsync(
-                "https://api.twitter.com/2/tweets/search/stream"
+                "/2/tweets/search/stream"
             ).Result;
             using (var reader = new StreamReader(stream)) {
                 while (
