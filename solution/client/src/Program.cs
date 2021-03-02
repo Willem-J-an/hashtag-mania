@@ -14,7 +14,7 @@ namespace twitter {
         private static string TwitterKey { get; set; }
         private static string TwitterSecret { get; set; }
         public static string ConnectionString { get; private set; }
-        private static int StreamLimit;  // Set a limit or 0 for no limit
+        private static int StreamLimit;
 
         static void Main(string[] args) {
             Console.WriteLine("Starting program");
@@ -34,8 +34,7 @@ namespace twitter {
 
         public static void LoadConfig() {
             var configuration = new ConfigurationBuilder()
-                .AddJsonFile("appsettings.json", false, true)
-                .AddEnvironmentVariables().Build();
+                .AddJsonFile("appsettings.json", false, true).Build();
             TwitterKey = configuration.GetValue<string>(
                 "AppSettings:twitterKey"
             );
@@ -94,10 +93,23 @@ namespace twitter {
         private static async Task ViewResultsPeriodically() {
             while (true) {
                 await Task.Run(() => {
-                    Console.WriteLine("Hourly popular hashtag review:");
+                    var table = new List<string>(){
+                        $"{new string('_', 54)}",
+                        $"|Hourly popular hashtag review{new string(' ', 23)}|",
+                        $"|{new string('_', 52)}|",
+                        String.Format(
+                            "|{0,-40}||{1,10}|", "Hashtag", "Happiness"
+                        ),
+                        $"|{new string('=', 52)}|",
+                    };
                     Postgres.GetRecentPopularHashtags().ForEach(
-                        (Hashtag h) => Console.WriteLine(h)
+                        (Hashtag h) => table.Add(String.Format(
+                            "|{0,-40}||{1,10}|", h.name.Trim(), h.happiness
+                        ))
                     );
+                    table.Add($"|{new string('_', 52)}|");
+                    Console.WriteLine(String.Join(Environment.NewLine, table));
+
                     var now = DateTime.UtcNow;
                     var previousTrigger = new DateTime(
                         now.Year, now.Month, now.Day, now.Hour, 0, 0, now.Kind
