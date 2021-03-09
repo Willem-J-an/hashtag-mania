@@ -2,7 +2,10 @@
 
 The solution streams tweets and determine what are the happiest hashtags being posted every hour.
 
-View the design and structure in the included .drawio file. Viewable in vs code with hediet.vscode-drawio extension.
+Design available in the included .drawio file. Editable in vs code with hediet.vscode-drawio extension.
+
+## Design overview
+![Design](./twitter_stream_design.png)
 
 ## Getting Started
 The solution can run:

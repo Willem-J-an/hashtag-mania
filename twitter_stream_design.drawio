@@ -1,19 +1,19 @@
-<mxfile host="65bd71144e" modified="2021-03-02T21:46:42.383Z" agent="5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Code/1.53.2 Chrome/87.0.4280.141 Electron/11.2.1 Safari/537.36" etag="SUy8WL3YQMJocxSV7P9Z" version="14.2.4" type="embed">
+<mxfile host="65bd71144e" modified="2021-03-09T21:10:37.387Z" agent="5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Code/1.54.0 Chrome/87.0.4280.141 Electron/11.3.0 Safari/537.36" etag="GCgz-cPCChB34q9Swgh8" version="14.2.4" type="embed">
     <diagram id="B3LtPdXln3Mm3sqRZGOn" name="Page-1">
-        <mxGraphModel dx="836" dy="657" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+        <mxGraphModel dx="1928" dy="750" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" background="#3399FF" math="0" shadow="0">
             <root>
                 <mxCell id="0"/>
                 <mxCell id="1" parent="0"/>
-                <mxCell id="TtvzDJQFdUPKZSvWziJc-46" value="&lt;div&gt;Application structure&lt;br&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=none;align=left;verticalAlign=top;" parent="1" vertex="1">
+                <mxCell id="TtvzDJQFdUPKZSvWziJc-46" value="&lt;div&gt;Application structure&lt;br&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=none;align=left;verticalAlign=top;strokeWidth=2;" parent="1" vertex="1">
                     <mxGeometry y="60" width="660" height="400" as="geometry"/>
                 </mxCell>
-                <mxCell id="TtvzDJQFdUPKZSvWziJc-8" value="Data flow diagram" style="rounded=0;whiteSpace=wrap;html=1;fillColor=none;verticalAlign=top;align=left;" parent="1" vertex="1">
+                <mxCell id="TtvzDJQFdUPKZSvWziJc-8" value="Data flow diagram" style="rounded=0;whiteSpace=wrap;html=1;fillColor=none;verticalAlign=top;align=left;strokeWidth=2;" parent="1" vertex="1">
                     <mxGeometry x="20" y="500" width="380" height="220" as="geometry"/>
                 </mxCell>
                 <mxCell id="TtvzDJQFdUPKZSvWziJc-5" value="stream" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" parent="1" source="TtvzDJQFdUPKZSvWziJc-1" target="TtvzDJQFdUPKZSvWziJc-2" edge="1">
                     <mxGeometry relative="1" as="geometry"/>
                 </mxCell>
-                <mxCell id="TtvzDJQFdUPKZSvWziJc-1" value="Twitter API" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                <mxCell id="TtvzDJQFdUPKZSvWziJc-1" value="Twitter API" style="rounded=0;whiteSpace=wrap;html=1;fillColor=none;" parent="1" vertex="1">
                     <mxGeometry x="50" y="530" width="120" height="60" as="geometry"/>
                 </mxCell>
                 <mxCell id="TtvzDJQFdUPKZSvWziJc-6" value="persist" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;entryPerimeter=0;" parent="1" source="TtvzDJQFdUPKZSvWziJc-2" target="TtvzDJQFdUPKZSvWziJc-10" edge="1">
@@ -21,7 +21,7 @@
                         <mxPoint x="250" y="680" as="targetPoint"/>
                     </mxGeometry>
                 </mxCell>
-                <mxCell id="TtvzDJQFdUPKZSvWziJc-2" value="application" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                <mxCell id="TtvzDJQFdUPKZSvWziJc-2" value="application" style="rounded=0;whiteSpace=wrap;html=1;fillColor=none;" parent="1" vertex="1">
                     <mxGeometry x="50" y="630" width="120" height="60" as="geometry"/>
                 </mxCell>
                 <mxCell id="TtvzDJQFdUPKZSvWziJc-7" value="Data direction" style="endArrow=classic;html=1;" parent="1" edge="1">
